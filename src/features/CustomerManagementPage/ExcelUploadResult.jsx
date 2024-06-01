@@ -12,38 +12,38 @@ function ExcelUploadResult(props) {
     const columns = [
         {
             title: 'Mã khách hàng',
-            dataIndex: 'customerId',
-            key: 'customerId',
+            dataIndex: 'maKH',
+            key: 'maKH',
         },
         {
             title: 'Tên khách hàng',
-            dataIndex: 'fullName',
-            key: 'fullName',
+            dataIndex: 'hoTen',
+            key: 'hoTen',
         },
         {
             title: 'Giới tính',
-            dataIndex: 'sex',
-            key: 'sex',
+            dataIndex: 'gioiTinh',
+            key: 'gioiTinh',
         },
         {
             title: 'Số CMT',
-            dataIndex: 'IDcard',
-            key: 'IDcard',
+            dataIndex: 'cmt',
+            key: 'cmt',
         },
         {
             title: 'Số điện thoại',
-            dataIndex: 'phoneNumber',
-            key: 'phoneNumber',
+            dataIndex: 'sdt',
+            key: 'sdt',
         },
         {
             title: 'Địa chỉ',
-            dataIndex: 'address',
-            key: 'address',
+            dataIndex: 'diaChi',
+            key: 'diaChi',
         },
         {
             title: 'Ngày sinh',
-            dataIndex: 'birthday',
-            key: 'birthday',
+            dataIndex: 'ngaySinh',
+            key: 'ngaySinh',
         }
     ];
     return ( 

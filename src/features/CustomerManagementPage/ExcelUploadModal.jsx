@@ -6,22 +6,35 @@ import * as XLSX from 'xlsx';
 import './AddModal.css';
 import ExcelUploadDragger from './ExcelUploadDragger';
 import ExcelUploadResult from './ExcelUploadResult';
+import axiosInstance from '../../utils/axios';
 
 
 const ExcelUploadModal = (props) => {
     const { isOpenExcelUploadModal, handleExcelUploadModal } = props;
     const [uploadedCustomers, setUploadedCustomers] = useState([]);
     const [isShowDragger, setShowDragger] = useState(true);
+    const [messageApi, contextHolder] = message.useMessage();
 
     const convertExcelRowToObject = (rows) => {
         let result = [];
         rows.length > 0 && rows.map(row => {
             const rowItemArray = Object.values(row)
+            const date = new Date(rowItemArray[6]);
+            if (!isNaN(date.getTime())) {
+                console.log(date.toISOString().split("T")[0])
+            }
             const elm = {
-                fullName: rowItemArray[0],
-                sex: rowItemArray[2],
-                phoneNumber: rowItemArray[1],
-                address: rowItemArray[3],
+                maKH: rowItemArray[0],
+                hoTen: rowItemArray[1],
+                cmt: rowItemArray[2].toString(),
+                gioiTinh: rowItemArray[3],
+                sdt: rowItemArray[4].toString(),
+                diaChi: rowItemArray[5],
+                ngaySinh: '2001-12-12',
+                createDate: new Date(),
+                createBy: localStorage.getItem("EmployeeName"),
+                modifiedDate: new Date(),
+                modifiedBy: localStorage.getItem("EmployeeName"),
             }
             result.push(elm)
         })
@@ -74,8 +87,22 @@ const ExcelUploadModal = (props) => {
         },
     };
 
+    const uploadListCustomer = async () => {
+        console.log(uploadedCustomers, 111)
+        const result = await axiosInstance.post('Guests/insertListGuest', uploadedCustomers);
+        if (result.status === 200) {
+            console.log(result, 'result')
+            messageApi.open({
+                type: 'success',
+                content: 'Thêm khách hàng thành công',
+            });
+            handleExcelUploadModal(false)
+        }
+    }
+
     return (
         <>
+        {contextHolder}
             <Modal
                 centered
                 open={isOpenExcelUploadModal}
@@ -94,7 +121,7 @@ const ExcelUploadModal = (props) => {
                 {
                     !isShowDragger ?
                         <ButtonGroup style={{ marginTop: '20px' }}>
-                            <Button type='primary' onClick={() => console.log('chốt')}><UploadOutlined /> Submit</Button>
+                            <Button type='primary' onClick={uploadListCustomer}><UploadOutlined /> Submit</Button>
                             <Button type='primary' onClick={() => setShowDragger(true)}>Tải lại</Button>
                         </ButtonGroup>
                     : <></>

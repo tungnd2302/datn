@@ -8,107 +8,67 @@ import RentRoomFilter from '../../features/CustomerManagementPage/CustomerManage
 import DataTable from '../../features/CustomerManagementPage/DataTable';
 import ExcelUploadModal from '../../features/CustomerManagementPage/ExcelUploadModal';
 import axiosInstance from '../../utils/axios';
+import EditModal from '../../features/CustomerManagementPage/EditModal';
 
-const columns = [
-  {
-    title: 'Mã khách hàng',
-    dataIndex: 'maKH',
-    key: 'maKH',
-  },
-  {
-    title: 'Tên khách hàng',
-    dataIndex: 'hoTen',
-    key: 'hoTen',
-  },
-  {
-    title: 'Số CMT',
-    dataIndex: 'cmt',
-    key: 'cmt',
-  },
-  {
-    title: 'Số điện thoại',
-    dataIndex: 'sdt',
-    key: 'sdt',
-  },
-  {
-    title: 'Địa chỉ',
-    dataIndex: 'diaChi',
-    key: 'diaChi',
-  },
-  {
-    title: 'Ngày sinh',
-    dataIndex: 'ngaySinh',
-    key: 'ngaySinh',
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>
-          <EditOutlined />
-        </a>
-        <a>
-          <DeleteOutlined />
-        </a>
-      </Space>
-    ),
-  },
-]
-
-
-const dataSourceSample = [
-  {
-    key: '1',
-    customerId: 'CR343042034',
-    fullName: 'John Brown',
-    phoneNumber: '032432432',
-    IDcard: '501',
-    birthday: '12-12-2023',
-    address: 'Canada'
-  },
-  {
-    key: '1',
-    customerId: 'CR343042034',
-    fullName: 'John Brown',
-    phoneNumber: '032432432',
-    IDcard: '501',
-    birthday: '12-12-2023',
-    address: 'Canada'
-  },
-  {
-    key: '4',
-    customerId: 'CR343042034',
-    fullName: 'John Brown',
-    phoneNumber: '032432432',
-    IDcard: '501',
-    birthday: '12-12-2023',
-    address: 'Canada'
-  },
-  {
-    key: '3',
-    customerId: 'CR343042034',
-    fullName: 'John Brown',
-    phoneNumber: '032432432',
-    IDcard: '501',
-    birthday: '12-12-2023',
-    address: 'Canada'
-  },
-  {
-    key: '2',
-    customerId: 'CR343042034',
-    fullName: 'John Brown',
-    phoneNumber: '032432432',
-    IDcard: '501',
-    birthday: '12-12-2023',
-    address: 'Canada'
-  },
-];
 
 function CustomerManagementPage(props) {
   const [dataSource, setDataSource] = useState([]);
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const [openExcelUploadModal, setExcelUploadModal] = useState(false);
+  const [selectedItemToEdit, setSelectedItemToEdit] = useState(false);
+
+  const columns = [
+    {
+      title: 'Mã khách hàng',
+      dataIndex: 'maKH',
+      key: 'maKH',
+    },
+    {
+      title: 'Tên khách hàng',
+      dataIndex: 'hoTen',
+      key: 'hoTen',
+    },
+    {
+      title: 'Số CMT',
+      dataIndex: 'cmt',
+      key: 'cmt',
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'sdt',
+      key: 'sdt',
+    },
+    {
+      title: 'Địa chỉ',
+      dataIndex: 'diaChi',
+      key: 'diaChi',
+    },
+    {
+      title: 'Ngày sinh',
+      dataIndex: 'ngaySinh',
+      key: 'ngaySinh',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <a onClick={() => editItem(record)}>
+            <EditOutlined />
+          </a>
+          <a>
+            <DeleteOutlined />
+          </a>
+        </Space>
+      ),
+    },
+  ]
+
+  const editItem = (record) => {
+    setSelectedItemToEdit(record)
+    setOpenEditModal(true)
+  }
 
   const getCustomers = async () => {
     try {
@@ -128,7 +88,7 @@ function CustomerManagementPage(props) {
 
   useEffect(() => {
     getCustomers()
-  }, [openAddModal])
+  }, [openAddModal, openExcelUploadModal, openEditModal])
   return (
     <div>
       <PageName name="Quản lý khách hàng" />
@@ -141,6 +101,7 @@ function CustomerManagementPage(props) {
 
       {/* page Modal */}
       <AddModal isOpenAddModal={openAddModal} handleOpenAddModal={setOpenAddModal} />
+      <EditModal isOpenEditModal={openEditModal} handleOpenEditModal={setOpenEditModal} itemToUpdate={selectedItemToEdit}/>
       <ExcelUploadModal isOpenExcelUploadModal={openExcelUploadModal} handleExcelUploadModal={setExcelUploadModal} />
     </div>
   );

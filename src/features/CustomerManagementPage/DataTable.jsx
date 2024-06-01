@@ -11,7 +11,7 @@ const DataTable = (props) => {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     
-    const currentPageData = props.dataSource.slice(startIndex, endIndex);
+    const currentPageData = props.dataSource.sort((a, b) => new Date(b.createDate) - new Date(a.createDate)).slice(startIndex, endIndex);
     return (
         <>
             <Table columns={props.columns} dataSource={currentPageData } style={{ marginTop: 20 }} pagination={false} />
