@@ -1,28 +1,48 @@
-import { Input, Modal, DatePicker, Button, InputNumber, Tag } from 'antd';
+import { Input, Modal, DatePicker, Button, Select, message } from 'antd';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
+import axiosInstance from '../../utils/axios';
 import './AddModal.css';
 
 const AddModal = (props) => {
     const { isOpenAddModal, handleOpenAddModal } = props;
+    const [messageApi, contextHolder] = message.useMessage();
+
     const formik = useFormik({
         initialValues: {
-            fullName: '',
-            cost: '',
-            roomName: '',
-            startDate: '',
-            endDate: '',
+            maKH: '',
+            hoTen: '',
+            gioiTinh: 'Nam',
+            ngaySinh: '',
+            sdt: '',
+            cmt: '',
+            diaChi: '',
         },
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit: async (values) => {
+            const data = {
+                ...values,
+                ghiChu: 'Khong co',
+                createBy: localStorage.getItem('EmployeeName')
+            }
+            const result = await axiosInstance.post('Guests', data);
+            if (result.status === 200) {
+                console.log(result, 'result')
+                messageApi.open({
+                    type: 'success',
+                    content: 'Thêm khách hàng thành công',
+                });
+                handleOpenAddModal(false)
+            }
         },
     });
+
     useEffect(() => {
         formik.resetForm();
-    },[isOpenAddModal])
-    
+    }, [isOpenAddModal])
+
     return (
         <>
+            {contextHolder}
             <Modal
                 centered
                 open={isOpenAddModal}
@@ -31,63 +51,80 @@ const AddModal = (props) => {
                 width={600}
                 footer={false}
             >
-                <h2>Thuê, đặt phòng</h2>
+                <h2>Tạo mới khách hàng</h2>
                 <form onSubmit={formik.handleSubmit}>
                     <div>
-                        <label> Họ và tên khách hàng</label>
+                        <label>Mã khách hàng</label>
                         <Input
-                            name='fullName'
+                            name='maKH'
                             size="large"
-                            placeholder="large size"
+                            placeholder=""
                             style={{ borderRadius: '0px', marginTop: 10 }}
                             onChange={formik.handleChange}
-                            value={formik.values.fullName}
+                            value={formik.values.maKH}
                         />
                     </div>
                     <div style={{ borderRadius: '8px', marginTop: 15 }}>
-                        <label>Ngày nhận phòng</label>
-                        <DatePicker style={{ borderRadius: '0px', marginTop: 10, width: '100%' }} name='startDate' onChange={(value) => formik.setFieldValue("startDate", value)} value={formik.values.startDate} />
+                        <label> Họ và tên khách hàng</label>
+                        <Input
+                            name='hoTen'
+                            size="large"
+                            placeholder=""
+                            style={{ borderRadius: '0px', marginTop: 10 }}
+                            onChange={formik.handleChange}
+                            value={formik.values.hoTen}
+                        />
                     </div>
-
                     <div style={{ borderRadius: '8px', marginTop: 15 }}>
-                        <label>Ngày trả phòng</label>
-                        <DatePicker style={{ borderRadius: '0px', marginTop: 10, width: '100%' }} name='endDate' onChange={(value) => formik.setFieldValue("endDate", value)} value={formik.values.endDate} />
+                        <label> Số CMT/CCCD</label>
+                        <Input
+                            name='cmt'
+                            size="large"
+                            placeholder=""
+                            style={{ borderRadius: '0px', marginTop: 10 }}
+                            onChange={formik.handleChange}
+                            value={formik.values.cmt}
+                        />
                     </div>
-
                     <div style={{ borderRadius: '8px', marginTop: 15 }}>
-                        <label>Phòng khả dụng</label>
-                        <div className="room-list" style={{ marginTop: 10 }}>
-                            <Tag onClick={() => formik.setFieldValue('roomName', 501)} className="room">501</Tag>
-                            <Tag className="room">502</Tag>
-                            <Tag className="room">503</Tag>
-                            <Tag className="room">504</Tag>
-                            <Tag className="room">505</Tag>
-                            <Tag className="room">506</Tag>
-                            <Tag className="room">574</Tag>
-                            <Tag className="room">507</Tag>
-                            <Tag className="room">508</Tag>
-                            <Tag className="room">501</Tag>
-                            <Tag className="room">502</Tag>
-                            <Tag className="room">503</Tag>
-                            <Tag className="room">504</Tag>
-                            <Tag className="room">505</Tag>
-                            <Tag className="room">506</Tag>
-                            <Tag className="room">574</Tag>
-                            <Tag className="room">507</Tag>
-                            <Tag className="room">508</Tag>
-                        </div>
+                        <label> Giới tính</label>
+                        <Select
+                            size='large'
+                            name="gioiTinh"
+                            defaultValue={"Nam"}
+                            style={{ width: '100%', marginTop: 10 }}
+                            onChange={(value) => formik.setFieldValue("gioiTinh", value)}
+                            options={[
+                                { value: 'Nam', label: 'Nam' },
+                                { value: 'Nữ', label: 'Nữ' }
+                            ]}
+                        />
                     </div>
-
+                    <div style={{ borderRadius: '8px', marginTop: 15 }}>
+                        <label> Số điện thoại</label>
+                        <Input
+                            name='sdt'
+                            size="large"
+                            placeholder=""
+                            style={{ borderRadius: '0px', marginTop: 10 }}
+                            onChange={formik.handleChange}
+                            value={formik.values.sdt}
+                        />
+                    </div>
+                    <div style={{ borderRadius: '8px', marginTop: 15 }}>
+                        <label> Địa chỉ</label>
+                        <Input
+                            name='diaChi'
+                            size="large"
+                            placeholder=""
+                            style={{ borderRadius: '0px', marginTop: 10 }}
+                            onChange={formik.handleChange}
+                            value={formik.values.diaChi}
+                        />
+                    </div>
                     <div style={{ borderRadius: '8px', marginTop: 15, marginBottom: 15 }}>
-                        <label>Giá tiền</label>
-                        <InputNumber
-                            name='cost'
-                            min={0}
-                            formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                            parser={(value) => value?.replace(/\$\s?|(,*)/g, '')}
-                            onChange={(value) => formik.setFieldValue("cost", value)}
-                            style={{ borderRadius: '0px', marginTop: 10, width: '100%' }}
-                        />
+                        <label> Ngày sinh</label>
+                        <DatePicker style={{ borderRadius: '0px', marginTop: 10, width: '100%' }} name='ngaySinh' onChange={(value) => formik.setFieldValue("ngaySinh", value)} value={formik.values.ngaySinh} />
                     </div>
                     <Button htmlType='submit'>Submit</Button>
                 </form>
