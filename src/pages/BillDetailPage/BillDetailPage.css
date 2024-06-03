@@ -1,0 +1,9 @@
+.page-header {
+    text-align: center;
+}
+
+.page-footer {
+    display: flex;
+    justify-content: end;
+    margin-top: 15px;
+}

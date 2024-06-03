@@ -1,8 +1,8 @@
 import { Pagination, Table } from 'antd';
 import { useState } from 'react';
 
-
 const DataTable = (props) => {
+  const { columns } = props
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
@@ -15,7 +15,7 @@ const DataTable = (props) => {
   const currentPageData = props.dataSource.slice(startIndex, endIndex);
   return (
     <>
-      <Table columns={props.columns} dataSource={currentPageData} style={{ marginTop: 20 }} pagination={false} />
+      <Table columns={columns} dataSource={currentPageData} style={{ marginTop: 20 }} pagination={false} />
       <Pagination
         style={{ marginTop: '20px', textAlign: 'right' }}
         current={currentPage}

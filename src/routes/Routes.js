@@ -8,6 +8,8 @@ import AdminLayoutPage from "../pages/AdminLayoutPage/Index";
 import RentRoomPage from "../pages/RentRoomPage/Index";
 import CustomerManagementPage from "../pages/CustomerManagementPage/Index";
 import LoginPage from "../pages/Login/Index";
+import BillPage from "../pages/BillPage/Index";
+import BillDetailPage from "../pages/BillDetailPage/Index";
 
 const PrivateRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem("Token") ?? null
@@ -26,6 +28,14 @@ const router = createBrowserRouter([
       {
         path: "customer-management",
         element: (<CustomerManagementPage />),
+      },
+      {
+        path: "bill-management",
+        element: (<BillPage />),
+      }, 
+      {
+        path: "bill-management/:id",
+        element: (<BillDetailPage />),
       }
     ],
     errorElement: <ErrorPage />,
